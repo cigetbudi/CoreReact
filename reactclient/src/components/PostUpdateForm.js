@@ -3,8 +3,8 @@ import Constants from '../utilities/Constants';
 
 export default function PostUpdateForm(props) {
   const InitialFormData = Object.freeze({
-    title: "Post x",
-    content: "This is post x"
+    title: props.post.title,
+    content: props.post.content
 });
 
   const [formData, setFormData] = useState(InitialFormData);
@@ -21,20 +21,20 @@ export default function PostUpdateForm(props) {
   const handleSubmit =(e) => {
         e.preventDefault();
 
-        const postToCreate ={
-            postId: 0,
+        const postToUpdate ={
+            postId: props.post.postId,
             title: formData.title,
             content : formData.content
         };
 
-        const url = Constants.API_URL_CREATE_POST;
+        const url = Constants.API_URL_UPDATE_POST;
 
         fetch(url,{
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Content-Type' : 'application/json'
             },
-            body : JSON.stringify(postToCreate)
+            body : JSON.stringify(postToUpdate)
           })
           .then(response => response.json())
           .then(responseFromServer =>{
@@ -45,13 +45,13 @@ export default function PostUpdateForm(props) {
             alert(error);
           });
 
-    props.onPostCreated(postToCreate);
+    props.onPostUpdated(postToUpdate);
   };
 
   return (
     
         <form className="w-100 px-5">
-            <h1 className="mt-5">Update post</h1>
+            <h1 className="mt-5">Update post "{props.post.title}"</h1>
 
             <div className="mt-5">
                 <label className="h3 form-label">Post Title</label>
@@ -64,7 +64,7 @@ export default function PostUpdateForm(props) {
             </div>
             
             <button onClick={handleSubmit} className="btn btn-dark btn-lg w-100 mt-5">Submit</button>
-            <button onClick={() => props.onPostCreated(null)} className="btn btn-secondary btn-lg w-100 wt-3">Cancel</button>
+            <button onClick={() => props.onPostUpdated(null)} className="btn btn-secondary btn-lg w-100 wt-3">Cancel</button>
         </form>
  
   );
